@@ -2,6 +2,10 @@
   --primary-color: #ff9854;
   /* 全局修改 */
   /* --van-padding-base: 8px */
+  /* 搜索框icon大小 */
+  --van-field-icon-size: 16px !important;
+  --van-search-left-icon-color: var(--primary-color) !important;
+  --van-font-bold: 500 !important;
 }
 body {
   font-size: 14px;
