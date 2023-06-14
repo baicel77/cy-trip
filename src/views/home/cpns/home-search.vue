@@ -1,9 +1,9 @@
 <template>
   <div class="home-search">
-    <!-- 位置信-->
+    <!-- 位置-->
     <div class="location section">
       <div class="city" @click="cityClick">
-        {{ cityStore.cityItem.cityName }}
+        {{ cityItem.cityName }}
       </div>
       <div class="position">
         <div class="text" @click="getPosition">我的位置</div>
@@ -14,12 +14,12 @@
     <div class="live section" @click="isShowCalendar = true">
       <div class="start">
         <div class="text">入住</div>
-        <div class="time">{{ startDate }}</div>
+        <div class="time">{{ startDateStr }}</div>
       </div>
       <div class="stay">共{{ stayDays }}晚</div>
       <div class="end">
         <div class="text">离店</div>
-        <div class="time">{{ endDate }}</div>
+        <div class="time">{{ endDateStr }}</div>
       </div>
     </div>
     <!-- 日历 -->
@@ -49,26 +49,29 @@
         </div>
       </template>
     </div>
-
+    <!-- 搜索框 -->
+    <div class="search section">
+      <div class="search-btn" @click="searchBtnClick">开始搜索</div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
-import useCity from '@/stores/modules/city'
+import useCity from '@/stores/modules/city';
 const cityStore = useCity()
+const { cityItem } = storeToRefs(cityStore)
+
 
 import useHome from '@/stores/modules/home';
 const homeStore = useHome()
 
 import { formatMonthDay, getDiffsDay } from '@/utils/formatTime'
-
-
-
 
 // 获取当前位置
 const getPosition = () => {
@@ -92,18 +95,31 @@ const cityClick = () => {
 // 日历
 const isShowCalendar = ref(false)
 
-const nowTimeStamp = new Date().getTime()
-const targetTimeStamp = new Date().getTime() + 1 * 24 * 60 * 60 * 1000
-const startDate = ref(formatMonthDay(nowTimeStamp))
-const endDate = ref(formatMonthDay(targetTimeStamp))
-const stayDays = ref(getDiffsDay(nowTimeStamp, targetTimeStamp))
-// const endDate = ref('06月14日')
+import useMain from '@/stores/modules/main';
+const mainStore = useMain()
+const { startDate, endDate } = storeToRefs(mainStore)
+const startDateStr = computed(() => formatMonthDay(startDate.value))
+const endDateStr = computed(() => formatMonthDay(endDate.value))
+
+const stayDays = ref(getDiffsDay(startDate.value, endDate.value))
 
 const onConfirm = (value) => {
-  startDate.value = formatMonthDay(value[0])
-  endDate.value = formatMonthDay(value[1])
+  startDate.value = value[0]
+  endDate.value = value[1]
   stayDays.value = getDiffsDay(value[0], value[1])
   isShowCalendar.value = false
+}
+
+// 点击搜索按钮
+const searchBtnClick = () => {
+  router.push({
+    path: '/search',
+    query: {
+      startDate: startDate.value,
+      endDate: endDate.value,
+      currentCity: cityItem.value.cityName
+    }
+  })
 }
 
 </script>
@@ -112,6 +128,10 @@ const onConfirm = (value) => {
 
 .home-search {
   --van-calendar-popup-height: 100%;
+   .section {
+      padding: 0 20px;
+      height: 44px;
+    }
    .location {
     display: flex;
     align-items: center;
@@ -163,6 +183,7 @@ const onConfirm = (value) => {
   .hot-suggest {
     display: flex;
     flex-wrap: wrap;
+    height: auto;
     .suggest-item {
       margin: 4px;
       padding: 4px 8px;
@@ -170,10 +191,20 @@ const onConfirm = (value) => {
       font-size: 12px;
     }
   }
-  .section {
-    padding: 0 20px;
-    height: 44px;
+  .search {
+    height: auto;
+    margin-top: 15px;
+    .search-btn {
+      height: 38px;
+      border-radius: 20px;
+      font-size: 18px;
+      color: #fff;
+      line-height: 38px;
+      text-align: center;
+      background-image: var(--theme-linear-gradient);
+    }
   }
+ 
 }
  
  
