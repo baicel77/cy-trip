@@ -5,7 +5,8 @@ const useMain = defineStore('main', {
   state() {
     return {
       startDate: nowTimeStamp,
-      endDate: targetTimeStamp
+      endDate: targetTimeStamp,
+      isShowLoading: false
     }
   },
   actions: {
