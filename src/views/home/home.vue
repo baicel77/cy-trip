@@ -1,5 +1,5 @@
 <template>
-  <div class="home title">
+  <div class="home title" ref="homeRef">
     <home-nav-bar></home-nav-bar>
     <div class="banner">
       <img src="@/assets/img/home/banner.webp" alt="">
@@ -12,8 +12,17 @@
   </div>
 </template>
 
-<script setup>
+<script>
 
+export default {
+  name: 'home'
+}
+
+</script>
+
+<script setup>
+import useScroll from '@/hooks/useScroll'
+import { computed, watch, ref, onActivated } from 'vue';
 import HomeNavBar from './cpns/home-nav-bar.vue'
 import HomeSearch from './cpns/home-search.vue'
 import HomeCategories from './cpns/home-categories.vue';
@@ -25,9 +34,8 @@ homeStore.fetchHotSuggest()
 homeStore.fetchCategroies()
 homeStore.fetchHouseList()
 
-import useScroll from '@/hooks/useScroll'
-import { computed, watch } from 'vue';
-const { isReachBottom, scrollTop } = useScroll()
+const homeRef = ref()
+const { isReachBottom, scrollTop } = useScroll(homeRef)
 watch(isReachBottom, (newValue) => {
   if (newValue) {
     homeStore.fetchHouseList().then(() => {
@@ -37,11 +45,20 @@ watch(isReachBottom, (newValue) => {
 })
 const isShowSearchBar = computed(() => scrollTop.value >= 500)
 
+onActivated(() => {
+  homeRef?.value.scrollTo({
+    top: scrollTop.value
+  })
+})
+
+
 
 </script>
 
 <style lang="less" scoped>
   .home {
+    height: 100vh;
+    overflow-y: auto;
     padding-bottom: 60px;
     .banner {
       img {

@@ -22,6 +22,7 @@ const introductionModule = computed(() => {
 
 <style lang="less" scoped>
 .price-intro {
+  margin-bottom: 100px;
   .content {
     color: #666;
     font-size: 12px;

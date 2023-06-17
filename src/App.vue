@@ -1,7 +1,11 @@
 <template>
   <div class="app">
     <!-- 路由组件占位符 -->
-    <router-view></router-view>
+    <router-view v-slot="{ Component }">
+      <keep-alive include="home">
+        <component :is="Component"></component>
+      </keep-alive>
+    </router-view>
     <!-- tabbar -->
     <tab-bar v-show="!route.meta?.hiddenTabBar"></tab-bar>
     <!-- loading -->
@@ -21,6 +25,5 @@ const mainStore = useMain()
 </script>
 
 <style lang="less" scoped>
-
 
 </style>

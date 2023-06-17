@@ -9,6 +9,7 @@
         "src/*"
       ]
     },
+    "jsx": "preserve",
     "lib": [
       "esnext",
       "dom",
@@ -16,6 +17,4 @@
       "scripthost"
     ]
   },
-  "vueCompilerOptions": {
-  }
 }

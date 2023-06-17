@@ -51,11 +51,8 @@ const getIndicatorData = (data) => {
     indicatorData.value[item.enumPictureCategory].push(item) 
   }
 }
-let index = 0
 
 watch(housePics, (newValue) => {  
-  console.log(index++)
-  console.log(housePics.value)   
   if (newValue) { 
     getIndicatorData(newValue)  
   } 

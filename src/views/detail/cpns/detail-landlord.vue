@@ -45,7 +45,7 @@ import useDetail from '@/stores/modules/detail';
 import { computed } from 'vue';
 const detailStore = useDetail()
 const landlordModule = computed(() => {
-  return detailStore.houseDetailList.mainPart?.dynamicModule.landlordModule
+  return detailStore.houseDetailList?.mainPart?.dynamicModule.landlordModule
 })
 
 </script>

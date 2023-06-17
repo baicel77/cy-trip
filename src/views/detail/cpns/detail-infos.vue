@@ -43,7 +43,7 @@ import { computed } from 'vue';
 
 import useDetail from '@/stores/modules/detail'
 const detailStore = useDetail()
-const topModule = computed(() => detailStore.houseDetailList.mainPart?.topModule)
+const topModule = computed(() => detailStore.houseDetailList?.mainPart?.topModule)
 </script>
 
 <style lang="less" scoped>

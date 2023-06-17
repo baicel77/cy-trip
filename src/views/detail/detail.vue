@@ -42,24 +42,36 @@ const detailRef = ref()
 const { scrollTop } = useScroll(detailRef)
 
 const tabRef = ref()
-watch(scrollTop, (value) => {
+watch(scrollTop, (newScrollTop) => {
   // 监听页面滚动,切换到相应的tab
-  const keyArr = []
-  for (const key in tabEls) {
-    const top = tabEls[key].offsetTop
-    if (Math.ceil(value) >= top - 44 ) {
-      keyArr.push(key)
+  // for (const key in tabEls) {
+  //   const top = tabEls[key].offsetTop
+  //   if (Math.ceil(value) >= top - 44 ) {
+  //     keyArr.push(key)
+  //   }
+  // }
+  // 获取el的offsetTop
+  const elOffsetTop = Object.values(tabEls).map(item => item.offsetTop)
+  let currentIndex = elOffsetTop.length - 1
+  for (let i = 0; i < elOffsetTop.length; i++) {
+    const value = elOffsetTop[i]
+    if (value >= newScrollTop + 45) {
+      currentIndex = i - 1
+      if (currentIndex === -1) {
+        return
+      }
+      break
     }
   }
   if (tabRef.value) {
-    tabRef.value.currentName = keyArr[keyArr.length - 1]
+    tabRef.value.currentName = Object.keys(tabEls)[currentIndex]
   }
 })
 // 监听tab点击, 滚动到相应的位置
 const onTabClick = (title) => {
   const scrollDistance = tabEls[title].offsetTop
   detailRef.value.scroll({
-    top: title === '描述' ? scrollDistance : scrollDistance - 44,
+    top: title === '描述' ? scrollDistance : (scrollDistance - 44),
   })
 }
 // 动态绑定组件ref逻辑
